@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  web-frontend:
+    image: php:7.0.33-apache
+    ports:
+      - "80:80"
+    volumes:
+      - ./web-frontend:/var/www/html
+    environment:
+      - PHP_IDE_CONFIG=serverName=web-frontend
+    depends_on:
+      - mysql
+      - mongodb
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword
+      MYSQL_DATABASE: yourdatabase
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongodb-data:/data/db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
